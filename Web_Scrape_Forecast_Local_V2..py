@@ -114,15 +114,31 @@ for date_time in time_element:
     date_element.append(day)
     prev_hour = hour
 
-# print(len(date_element))
-# print("\n")
-# print(date_element)
-# print(len(temperature_element))
+#find wind speed and direction
+wind_speed_element = []
+wind_direction_element = []
+
+for wind_temp in cells:
+      wind_elements = wind_temp.find_all('tr', class_ = 'detailed-view step-wind detailed-view comb-forecast')
+
+      for wind_elem in wind_elements:
+            wind_speed = wind_elem.find_all('span', {'class':'speed'})
+            wind_direction = wind_elem.find_all('span', {'class':'direction'})
+
+            for wind_speed_elem in wind_speed:
+                  wind_speed_v1 = wind_speed_elem.get_text().strip()
+                  wind_speed_element.append(wind_speed_v1)
+            for wind_direc_elem in wind_direction:
+                  wind_direc_v1 = wind_direc_elem['data-value']
+                  wind_direction_element.append(wind_direc_v1)
+
 
 #adding information to df
 df = pd.DataFrame({'date':date_element,
                   'time': time_element,
-                  'percipitation': percip_element
+                  'percipitation': percip_element,
+                  'Wind Speed' : wind_speed_element,
+                  'Wind direction' : wind_direction_element
                   })
 
 pd.set_option('display.max_rows', None)  # Show all rows
